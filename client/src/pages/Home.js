@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Calendar, Ticket, Award, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Youtube, Heart, Globe, Clock, CreditCard, Shield, ChevronRight, Star, Users, Coffee, Music, Briefcase } from 'lucide-react';
+import { Calendar, Ticket, Award, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Home = () => {
@@ -63,7 +63,6 @@ const Home = () => {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map((event) => {
-              // ✅ Image handling
               const imageUrl = event.image && event.image.startsWith('http')
                 ? event.image
                 : event.image
@@ -133,7 +132,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Footer (simplified – you can keep your existing long footer) */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 mt-auto">
         <div className="container mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
