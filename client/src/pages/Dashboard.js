@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { Calendar, Ticket, DollarSign, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Ticket, DollarSign, CheckCircle, Clock, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+
+const Dashboard = () => {
+  // ... (the rest of your Dashboard code stays exactly the same)
+};
+
+export default Dashboard;
 
 const Dashboard = () => {
   const { user } = useAuth();
