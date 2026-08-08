@@ -14,21 +14,25 @@ const Home = () => {
   }, []);
 
   const fetchUpcomingEvents = async () => {
-    try {
-      const response = await api.get('/api/events'); // ✅ uses the api instance
-      const today = new Date();
-      const upcoming = response.data
-        .filter(event => new Date(event.date) >= today)
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .slice(0, 3);
-      setEvents(upcoming);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      toast.error('Failed to load upcoming events');
-    } finally {
-      setLoadingEvents(false);
-    }
-  };
+  try {
+    const url = 'https://vd-eventhub-backend.onrender.com/api/events';
+    console.log('📡 Fetching from:', url);
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log('✅ Data received:', data);
+    const today = new Date();
+    const upcoming = data
+      .filter(event => new Date(event.date) >= today)
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 3);
+    setEvents(upcoming);
+  } catch (error) {
+    console.error('❌ Error fetching events:', error);
+    toast.error('Failed to load upcoming events');
+  } finally {
+    setLoadingEvents(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex flex-col">
