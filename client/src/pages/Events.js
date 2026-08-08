@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { Search, Calendar, MapPin, DollarSign } from 'lucide-react';
 import toast from 'react-hot-toast';
+import api from '../services/api'; // ✅ uses environment variable
 
 const Events = () => {
   const [events, setEvents] = useState([]);
@@ -12,7 +12,7 @@ const Events = () => {
 
   const fetchEvents = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/events?search=${search}&category=${category}`);
+      const response = await api.get(`/api/events?search=${search}&category=${category}`);
       setEvents(response.data);
     } catch (error) {
       toast.error('Failed to load events');
@@ -39,6 +39,7 @@ const Events = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="glass-card p-6 mb-8">
         <h1 className="text-3xl font-bold mb-6 text-white">Upcoming Events</h1>
+        
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
@@ -65,17 +66,10 @@ const Events = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {events.map((event) => (
           <div key={event._id} className="glass-card overflow-hidden">
-            {/* ✅ IMAGE DISPLAY – works with full URL or local path */}
-            <img
-              src={event.image && event.image.startsWith('http') 
-                ? event.image 
-                : event.image 
-                  ? `http://localhost:5000${event.image}` 
-                  : 'https://via.placeholder.com/400x200?text=No+Image'
-              }
+            <img 
+              src={event.image ? `http://localhost:5000${event.image}` : 'https://via.placeholder.com/400x200'} 
               alt={event.title}
               className="w-full h-48 object-cover"
-              onError={(e) => { e.target.src = 'https://via.placeholder.com/400x200?text=Image+Error'; }}
             />
             <div className="p-6">
               <h3 className="text-xl font-bold mb-2">{event.title}</h3>
@@ -94,7 +88,7 @@ const Events = () => {
                   <span>₹{event.price}</span>
                 </div>
               </div>
-              <Link
+              <Link 
                 to={`/events/${event._id}`}
                 className="btn-primary inline-block w-full text-center"
               >

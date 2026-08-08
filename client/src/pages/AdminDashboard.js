@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { Users, Calendar, Ticket, DollarSign, TrendingUp, Plus, Trash2, Camera, X, Edit3 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Html5QrcodeScanner } from 'html5-qrcode';
+import api from '../services/api'; // ✅ uses environment variable
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -57,9 +57,7 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/dashboard', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/admin/dashboard');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -69,7 +67,7 @@ const AdminDashboard = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/events');
+      const response = await api.get('/api/events');
       setEvents(response.data);
       setLoading(false);
     } catch (error) {
@@ -82,9 +80,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/users', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/admin/users');
       const regularUsers = response.data.filter(user => user.role !== 'admin');
       setUsers(regularUsers);
     } catch (error) {
@@ -95,9 +91,7 @@ const AdminDashboard = () => {
   const fetchBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/bookings', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/admin/bookings');
       setBookings(response.data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -109,9 +103,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/events', newEvent, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.post('/api/events', newEvent);
       toast.success('Event added successfully!');
       setShowAddEvent(false);
       setNewEvent({
@@ -137,9 +129,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/events/${editingEvent._id}`, editFormData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.put(`/api/events/${editingEvent._id}`, editFormData);
       toast.success('Event updated successfully!');
       setShowEditEvent(false);
       setEditingEvent(null);
@@ -155,9 +145,7 @@ const AdminDashboard = () => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/events/${eventId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await api.delete(`/api/events/${eventId}`);
         toast.success('Event deleted successfully');
         fetchEvents();
         fetchStats();
@@ -204,10 +192,7 @@ const AdminDashboard = () => {
       setScanning(true);
       try {
         const token = localStorage.getItem('token');
-        await axios.post('http://localhost:5000/api/bookings/scan-qr', 
-          { qrData: decodedText },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await api.post('/api/bookings/scan-qr', { qrData: decodedText });
         toast.success('Attendance marked successfully!');
         closeScanner();
         fetchStats();
@@ -234,10 +219,7 @@ const AdminDashboard = () => {
       toast.loading('Checking attendance...');
       try {
         const token = localStorage.getItem('token');
-        await axios.post('http://localhost:5000/api/bookings/scan-qr', 
-          { qrData: bookingId.trim() },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await api.post('/api/bookings/scan-qr', { qrData: bookingId.trim() });
         toast.dismiss();
         toast.success('✅ Attendance marked successfully!');
         fetchStats();
@@ -302,16 +284,7 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-bold mb-6">Manage Events</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-3">Title</th>
-                <th className="text-left py-3">Category</th>
-                <th className="text-left py-3">Date</th>
-                <th className="text-left py-3">Price</th>
-                <th className="text-left py-3">Seats</th>
-                <th className="text-left py-3">Actions</th>
-              </tr>
-            </thead>
+            <thead><tr className="border-b"><th className="text-left py-3">Title</th><th className="text-left py-3">Category</th><th className="text-left py-3">Date</th><th className="text-left py-3">Price</th><th className="text-left py-3">Seats</th><th className="text-left py-3">Actions</th></tr></thead>
             <tbody>
               {events.map(event => (
                 <tr key={event._id} className="border-b hover:bg-gray-50">
@@ -337,44 +310,18 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-bold mb-6">All Bookings / Tickets</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-3">User</th>
-                <th className="text-left py-3">Event</th>
-                <th className="text-left py-3">Amount</th>
-                <th className="text-left py-3">Payment</th>
-                <th className="text-left py-3">Attendance</th>
-                <th className="text-left py-3">Booked On</th>
-                <th className="text-left py-3">Ticket ID</th>
-                <th className="text-left py-3">Actions</th>
-              </tr>
-            </thead>
+            <thead><tr className="border-b"><th className="text-left py-3">User</th><th className="text-left py-3">Event</th><th className="text-left py-3">Amount</th><th className="text-left py-3">Payment</th><th className="text-left py-3">Attendance</th><th className="text-left py-3">Booked On</th><th className="text-left py-3">Ticket ID</th><th>Actions</th></tr></thead>
             <tbody>
-              {bookings.map((booking) => (
+              {bookings.map(booking => (
                 <tr key={booking._id} className="border-b hover:bg-gray-50">
-                  <td className="py-3">
-                    {booking.userId?.name || 'Unknown'}
-                    <div className="text-xs text-gray-400">{booking.userId?.email}</div>
-                  </td>
+                  <td className="py-3">{booking.userId?.name || 'Unknown'}<div className="text-xs text-gray-400">{booking.userId?.email}</div></td>
                   <td className="py-3">{booking.eventId?.title || 'Deleted Event'}</td>
                   <td className="py-3">₹{booking.amount}</td>
-                  <td className="py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs ${booking.paymentStatus === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                      {booking.paymentStatus}
-                    </span>
-                  </td>
-                  <td className="py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs ${booking.attendanceStatus === 'attended' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-                      {booking.attendanceStatus}
-                    </span>
-                  </td>
+                  <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs ${booking.paymentStatus === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{booking.paymentStatus}</span></td>
+                  <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs ${booking.attendanceStatus === 'attended' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>{booking.attendanceStatus}</span></td>
                   <td className="py-3">{new Date(booking.bookingDate).toLocaleDateString()}</td>
                   <td className="py-3 font-mono text-xs">{booking._id.slice(-8)}</td>
-                  <td className="py-3">
-                    <button onClick={() => navigator.clipboard.writeText(booking._id)} className="text-gray-500 hover:text-purple-600">
-                      📋
-                    </button>
-                  </td>
+                  <td className="py-3"><button onClick={() => navigator.clipboard.writeText(booking._id)} className="text-gray-500 hover:text-purple-600">📋</button></td>
                 </tr>
               ))}
             </tbody>
@@ -383,29 +330,18 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Users Table – CORRECTED */}
+      {/* Users Table */}
       <div className="bg-white rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold mb-6">Registered Users</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-3">Name</th>
-                <th className="text-left py-3">Email</th>
-                <th className="text-left py-3">Role</th>
-                <th className="text-left py-3">Joined</th>
-              </tr>
-            </thead>
+            <thead><tr className="border-b"><th className="text-left py-3">Name</th><th className="text-left py-3">Email</th><th className="text-left py-3">Role</th><th className="text-left py-3">Joined</th></tr></thead>
             <tbody>
-              {users.map((user) => (
+              {users.map(user => (
                 <tr key={user._id} className="border-b hover:bg-gray-50">
                   <td className="py-3">{user.name}</td>
                   <td className="py-3">{user.email}</td>
-                  <td className="py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>
-                      {user.role}
-                    </span>
-                  </td>
+                  <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>{user.role}</span></td>
                   <td className="py-3">{new Date(user.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}

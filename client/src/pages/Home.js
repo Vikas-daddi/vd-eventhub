@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { Calendar, Ticket, Award, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react';
 import toast from 'react-hot-toast';
+import api from '../services/api'; // ✅ uses environment variable
 
 const Home = () => {
   const [events, setEvents] = useState([]);
@@ -14,7 +14,7 @@ const Home = () => {
 
   const fetchUpcomingEvents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/events');
+      const response = await api.get('/api/events');
       const today = new Date();
       const upcoming = response.data
         .filter(event => new Date(event.date) >= today)

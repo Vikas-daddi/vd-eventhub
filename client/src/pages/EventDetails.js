@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Calendar, MapPin, DollarSign, Clock, Users, Ticket, CheckCircle, CreditCard, Smartphone, X, RefreshCw, Timer } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api'; // ✅ uses environment variable
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -20,7 +20,7 @@ const EventDetails = () => {
 
   const fetchEvent = useCallback(async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/events/${id}`);
+      const response = await api.get(`/api/events/${id}`);
       setEvent(response.data);
     } catch (error) {
       toast.error('Failed to load event');
@@ -34,10 +34,8 @@ const EventDetails = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token || !user) return;
-      const response = await axios.get('http://localhost:5000/api/bookings/my-bookings', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const activeBooking = response.data.some(booking => 
+      const response = await api.get('/api/bookings/my-bookings');
+      const activeBooking = response.data.some(booking =>
         (booking.eventId?._id === id || booking.eventId === id) &&
         booking.attendanceStatus !== 'cancelled'
       );
@@ -132,11 +130,7 @@ const EventDetails = () => {
         amount: Number(event.price),
         paymentMethod: paymentMethod
       };
-      const response = await axios.post(
-        'http://localhost:5000/api/bookings',
-        bookingData,
-        { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
-      );
+      const response = await api.post('/api/bookings', bookingData);
       if (response.data && (response.data.success === true || response.data.booking?._id || response.data._id)) {
         toast.success('Payment successful! Booking confirmed 🎉');
         setTimeout(() => navigate('/bookings'), 1500);
@@ -167,26 +161,17 @@ const EventDetails = () => {
 
   if (!event) return null;
 
-  // ✅ Determine image source
-  const imageSrc = event.image && event.image.startsWith('http')
-    ? event.image
-    : event.image
-      ? `http://localhost:5000${event.image}`
-      : 'https://via.placeholder.com/1200x400?text=Event+Image';
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="glass-card overflow-hidden">
         <img
-          src={imageSrc}
+          src={event.image ? `http://localhost:5000${event.image}` : 'https://via.placeholder.com/1200x400'}
           alt={event.title}
           className="w-full h-96 object-cover"
-          onError={(e) => { e.target.src = 'https://via.placeholder.com/1200x400?text=Image+Error'; }}
         />
         <div className="p-8">
           <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
 
-          {/* Countdown Timer */}
           <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 mb-6 flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2">
               <Timer className="w-6 h-6 text-purple-600" />
@@ -247,7 +232,6 @@ const EventDetails = () => {
         </div>
       </div>
 
-      {/* Payment Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">

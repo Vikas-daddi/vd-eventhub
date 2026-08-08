@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Calendar, MapPin, DollarSign, Download, Eye, Trash2, Ticket, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import api from '../services/api'; // ✅ uses environment variable
 
 const BookingHistory = () => {
   const [bookings, setBookings] = useState([]);
@@ -16,9 +16,7 @@ const BookingHistory = () => {
   const fetchBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/bookings/my-bookings', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/bookings/my-bookings');
       setBookings(response.data);
     } catch (error) {
       toast.error('Failed to load bookings');
@@ -94,11 +92,7 @@ const BookingHistory = () => {
       setCancelling(bookingId);
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.put(`http://localhost:5000/api/bookings/cancel/${bookingId}`, 
-          { reason: 'User requested cancellation' },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        
+        const response = await api.put(`/api/bookings/cancel/${bookingId}`, { reason: 'User requested cancellation' });
         toast.success(response.data.message);
         fetchBookings();
       } catch (error) {
@@ -154,24 +148,16 @@ const BookingHistory = () => {
                   
                   {/* Ticket Body */}
                   <div className="p-5">
-                    {/* Status Badge */}
                     <div className="mb-4">
                       {booking.attendanceStatus === 'attended' ? (
-                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          ✓ ATTENDED
-                        </span>
+                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">✓ ATTENDED</span>
                       ) : booking.attendanceStatus === 'cancelled' ? (
-                        <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          ✗ CANCELLED
-                        </span>
+                        <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">✗ CANCELLED</span>
                       ) : (
-                        <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
-                          ✓ VALID TICKET
-                        </span>
+                        <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">✓ VALID TICKET</span>
                       )}
                     </div>
                     
-                    {/* Event Details Grid */}
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <div className="flex items-center gap-2 text-gray-600">
                         <Calendar className="w-4 h-4 text-purple-500" />
@@ -203,10 +189,8 @@ const BookingHistory = () => {
                       </div>
                     </div>
                     
-                    {/* Divider */}
                     <div className="border-t border-dashed border-gray-200 my-4"></div>
                     
-                    {/* QR Code Section */}
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs text-gray-400 mb-1">Ticket ID</p>
@@ -229,42 +213,22 @@ const BookingHistory = () => {
                           onClick={() => setShowQR(showQR === booking._id ? null : booking._id)}
                           className="bg-purple-100 p-3 rounded-xl hover:bg-purple-200 transition"
                         >
-                          {showQR === booking._id ? (
-                            <Eye className="w-8 h-8 text-purple-600" />
-                          ) : (
-                            <Download className="w-8 h-8 text-purple-600" />
-                          )}
+                          {showQR === booking._id ? <Eye className="w-8 h-8 text-purple-600" /> : <Download className="w-8 h-8 text-purple-600" />}
                         </button>
                       )}
                     </div>
                     
-                    {/* QR Code Display */}
                     {showQR === booking._id && booking.qrCode && booking.attendanceStatus !== 'cancelled' && (
                       <div className="mt-4 pt-4 border-t text-center bg-gray-50 rounded-xl p-4">
-                        <img 
-                          src={booking.qrCode} 
-                          alt="QR Code" 
-                          className="w-40 h-40 mx-auto border-2 border-purple-200 rounded-xl p-2 bg-white"
-                        />
+                        <img src={booking.qrCode} alt="QR Code" className="w-40 h-40 mx-auto border-2 border-purple-200 rounded-xl p-2 bg-white" />
                         <p className="text-xs text-gray-500 mt-2">Scan this QR code at the venue entrance</p>
                         <div className="flex gap-2 justify-center mt-3">
-                          <button
-                            onClick={() => downloadPNG(booking.qrCode, booking._id)}
-                            className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition"
-                          >
-                            Save as PNG
-                          </button>
-                          <button
-                            onClick={() => downloadPDF(booking, booking.qrCode)}
-                            className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition"
-                          >
-                            Download PDF
-                          </button>
+                          <button onClick={() => downloadPNG(booking.qrCode, booking._id)} className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition">Save as PNG</button>
+                          <button onClick={() => downloadPDF(booking, booking.qrCode)} className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition">Download PDF</button>
                         </div>
                       </div>
                     )}
                     
-                    {/* Action Buttons */}
                     <div className="flex gap-2 mt-4">
                       {booking.attendanceStatus !== 'cancelled' && booking.attendanceStatus !== 'attended' && (
                         <button
@@ -279,37 +243,21 @@ const BookingHistory = () => {
                       
                       {booking.attendanceStatus !== 'cancelled' && (
                         <>
-                          <button
-                            onClick={() => downloadPNG(booking.qrCode, booking._id)}
-                            className="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-600 transition"
-                          >
-                            PNG
-                          </button>
-                          <button
-                            onClick={() => downloadPDF(booking, booking.qrCode)}
-                            className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
-                          >
-                            PDF Ticket
-                          </button>
+                          <button onClick={() => downloadPNG(booking.qrCode, booking._id)} className="flex-1 bg-green-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-green-600 transition">PNG</button>
+                          <button onClick={() => downloadPDF(booking, booking.qrCode)} className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition">PDF Ticket</button>
                         </>
                       )}
                     </div>
                     
-                    {/* Refund Info for Cancelled */}
                     {booking.attendanceStatus === 'cancelled' && booking.refundAmount > 0 && (
                       <div className="mt-3 p-2 bg-orange-50 rounded-lg text-center">
-                        <p className="text-xs text-orange-600">
-                          💰 Refund of ₹{booking.refundAmount} processed
-                        </p>
+                        <p className="text-xs text-orange-600">💰 Refund of ₹{booking.refundAmount} processed</p>
                       </div>
                     )}
                   </div>
                   
-                  {/* Ticket Footer */}
                   <div className="bg-gray-50 px-5 py-3 rounded-b-2xl">
-                    <p className="text-center text-xs text-gray-400">
-                      Powered by EventHub | Smart Event Management
-                    </p>
+                    <p className="text-center text-xs text-gray-400">Powered by EventHub | Smart Event Management</p>
                   </div>
                 </div>
               </div>

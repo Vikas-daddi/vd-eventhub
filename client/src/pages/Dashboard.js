@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import { Ticket, DollarSign, CheckCircle, Clock, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import api from '../services/api'; // ✅ uses environment variable
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -24,9 +24,7 @@ const Dashboard = () => {
   const fetchUserBookings = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/bookings/my-bookings', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/bookings/my-bookings');
       setBookings(response.data);
 
       const activeBookings = response.data.filter(booking => 
