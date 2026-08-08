@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Ticket, Award, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react';
 import toast from 'react-hot-toast';
-import api from '../services/api'; // ✅ IMPORTANT: this loads api.js
-
+console.log('🔵 Home.js loaded');
+import api from '../services/api';
+console.log('🟢 api imported:', api);
 const Home = () => {
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
