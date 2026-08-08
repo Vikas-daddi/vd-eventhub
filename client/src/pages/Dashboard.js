@@ -6,12 +6,6 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  // ... (the rest of your Dashboard code stays exactly the same)
-};
-
-export default Dashboard;
-
-const Dashboard = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,8 +28,7 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(response.data);
-      
-      // Calculate stats
+
       const activeBookings = response.data.filter(booking => 
         booking.attendanceStatus !== 'cancelled'
       );
@@ -76,7 +69,6 @@ const Dashboard = () => {
     );
   }
 
-  // Separate bookings by status
   const upcomingBookings = bookings.filter(b => b.attendanceStatus === 'pending');
   const attendedBookings = bookings.filter(b => b.attendanceStatus === 'attended');
   const cancelledBookings = bookings.filter(b => b.attendanceStatus === 'cancelled');
@@ -197,7 +189,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Cancelled Events Section (optional) */}
+      {/* Cancelled Events Section */}
       {cancelledBookings.length > 0 && (
         <div className="glass-card p-8">
           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
