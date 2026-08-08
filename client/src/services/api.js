@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-// Use environment variable in production, fallback to localhost in development
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// ✅ Hardcoded for testing
+const API_URL = 'https://vd-eventhub-backend.onrender.com';
 
-// ✅ DEBUG – this will show a popup when the page loads
+// Leave the alert for now
 alert('API_URL: ' + API_URL);
 console.log('🌐 API_URL:', API_URL);
 
@@ -14,7 +14,6 @@ const api = axios.create({
   },
 });
 
-// Add a request interceptor to attach the token automatically
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
