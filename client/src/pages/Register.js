@@ -14,7 +14,7 @@ const Register = () => {
     e.preventDefault();
     const success = await register(name, email, password);
     if (success) {
-      navigate('/');
+      navigate('/events');
     }
   };
 
