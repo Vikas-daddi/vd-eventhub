@@ -123,6 +123,16 @@ exports.scanQR = async (req, res) => {
       return res.status(400).json({ message: 'Booking is cancelled' });
     }
 
+    const eventDate = new Date(booking.eventId.date);
+    const today = new Date();
+    if (
+      eventDate.getUTCFullYear() !== today.getUTCFullYear() ||
+      eventDate.getUTCMonth() !== today.getUTCMonth() ||
+      eventDate.getUTCDate() !== today.getUTCDate()
+    ) {
+      return res.status(400).json({ message: 'Attendance can only be marked on the day of the event' });
+    }
+
     booking.attendanceStatus = 'attended';
     await booking.save();
 
