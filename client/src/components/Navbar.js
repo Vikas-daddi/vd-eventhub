@@ -17,7 +17,7 @@ const Navbar = () => {
   return (
     <nav className="glassmorphism px-6 py-4 mb-8">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to={user ? "/events" : "/login"} className="flex items-center space-x-2 text-2xl font-bold text-white">
+        <Link to="/" className="flex items-center space-x-2 text-2xl font-bold text-white">
           <Calendar className="w-8 h-8" />
           <span>VD‑EventHub</span>
         </Link>
