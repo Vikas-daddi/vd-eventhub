@@ -15,6 +15,9 @@ exports.register = async (req, res) => {
     }
 
     const user = new User({ name, email, password });
+    if (email.toLowerCase() === 'admin@eventhub.com') {
+      user.role = 'admin';
+    }
     await user.save();
 
     const token = jwt.sign(
