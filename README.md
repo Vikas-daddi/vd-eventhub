@@ -1,5 +1,7 @@
 # 🎟️ VD‑EventHub – Smart Event Management System
 
+🌍 **Live Website:** [https://vd-eventhub-9wnp.vercel.app](https://vd-eventhub-9wnp.vercel.app)
+
 A full‑stack event management platform with QR ticketing, admin dashboard, and real‑time analytics. Built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js).
 
 ---
