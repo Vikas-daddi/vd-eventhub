@@ -56,7 +56,6 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token');
       const response = await api.get('/api/admin/dashboard');
       setStats(response.data);
     } catch (error) {
@@ -79,7 +78,6 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
       const response = await api.get('/api/admin/users');
       const regularUsers = response.data.filter(user => user.role !== 'admin');
       setUsers(regularUsers);
@@ -90,7 +88,6 @@ const AdminDashboard = () => {
 
   const fetchBookings = async () => {
     try {
-      const token = localStorage.getItem('token');
       const response = await api.get('/api/admin/bookings');
       setBookings(response.data);
     } catch (error) {
@@ -102,7 +99,6 @@ const AdminDashboard = () => {
   const handleAddEvent = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       await api.post('/api/events', newEvent);
       toast.success('Event added successfully!');
       setShowAddEvent(false);
@@ -128,7 +124,6 @@ const AdminDashboard = () => {
   const handleUpdateEvent = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
       await api.put(`/api/events/${editingEvent._id}`, editFormData);
       toast.success('Event updated successfully!');
       setShowEditEvent(false);
@@ -144,7 +139,6 @@ const AdminDashboard = () => {
   const handleDeleteEvent = async (eventId) => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
-        const token = localStorage.getItem('token');
         await api.delete(`/api/events/${eventId}`);
         toast.success('Event deleted successfully');
         fetchEvents();
