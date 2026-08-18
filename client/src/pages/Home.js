@@ -1,38 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Ticket, Award, Mail, Phone, MapPin, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Calendar, Ticket, Award, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
-console.log('🔵 Home.js loaded');
-import api from '../services/api';
-console.log('🟢 api imported:', api);
+import api, { API_URL } from '../services/api';
+import { useAuth } from '../context/AuthContext';
+
 const Home = () => {
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+  const { user, toggleWishlist } = useAuth();
 
   useEffect(() => {
     fetchUpcomingEvents();
   }, []);
 
   const fetchUpcomingEvents = async () => {
-  try {
-    const url = 'https://vd-eventhub-backend.onrender.com/api/events';
-    console.log('📡 Fetching from:', url);
-    const response = await fetch(url);
-    const data = await response.json();
-    console.log('✅ Data received:', data);
-    const today = new Date();
-    const upcoming = data
-      .filter(event => new Date(event.date) >= today)
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
-      .slice(0, 3);
-    setEvents(upcoming);
-  } catch (error) {
-    console.error('❌ Error fetching events:', error);
-    toast.error('Failed to load upcoming events');
-  } finally {
-    setLoadingEvents(false);
-  }
-};
+    try {
+      const response = await api.get('/api/events');
+      const today = new Date();
+      const upcoming = response.data
+        .filter(event => new Date(event.date) >= today)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 3);
+      setEvents(upcoming);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      toast.error('Failed to load upcoming events');
+    } finally {
+      setLoadingEvents(false);
+    }
+  };
+
+  const handleWishlistToggle = async (eventId) => {
+    try {
+      await toggleWishlist(eventId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -68,22 +73,33 @@ const Home = () => {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {events.map((event) => {
-              const imageUrl = event.image && event.image.startsWith('http')
-                ? event.image
-                : event.image
-                  ? `http://localhost:5000${event.image}`
-                  : 'https://via.placeholder.com/400x200?text=Event';
+              // Image handling fix
+              const imageUrl = event.image 
+                ? (event.image.startsWith('http') ? event.image : `${API_URL}${event.image}`) 
+                : 'https://via.placeholder.com/400x200?text=Event';
               return (
-                <div key={event._id} className="glass-card overflow-hidden hover:scale-105 transition-transform duration-300">
-                  <img
-                    src={imageUrl}
-                    alt={event.title}
-                    className="w-full h-48 object-cover"
-                    onError={(e) => { e.target.src = 'https://via.placeholder.com/400x200?text=Image+Error'; }}
-                  />
+                <div key={event._id} className="glass-card overflow-hidden hover:scale-105 transition-transform duration-300 relative group">
+                  <div className="relative">
+                    <img
+                      src={imageUrl}
+                      alt={event.title}
+                      className="w-full h-48 object-cover"
+                      onError={(e) => { e.target.src = 'https://via.placeholder.com/400x200?text=Image+Error'; }}
+                    />
+                    {user && (
+                      <button 
+                        onClick={() => handleWishlistToggle(event._id)}
+                        className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur rounded-full hover:bg-white transition-colors z-20"
+                      >
+                        <Heart 
+                          className={`w-5 h-5 ${user.wishlist?.includes(event._id) ? 'fill-red-500 text-red-500' : 'text-gray-500'}`} 
+                        />
+                      </button>
+                    )}
+                  </div>
                   <div className="p-6">
                     <h3 className="text-2xl font-bold mb-2 text-purple-600 line-clamp-1">{event.title}</h3>
-                    <div className="space-y-2 text-gray-600 mb-4">
+                    <div className="space-y-2 text-gray-600 dark:text-gray-300 mb-4">
                       <div className="flex items-center gap-2">
                         <Calendar size={16} />
                         <span className="text-sm">{new Date(event.date).toLocaleDateString()}</span>
@@ -121,18 +137,18 @@ const Home = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <div className="glass-card text-center">
             <Calendar className="w-16 h-16 mx-auto text-purple-600 mb-4" />
-            <h3 className="text-xl font-bold mb-3">Easy Booking</h3>
-            <p className="text-gray-600">Book tickets in seconds with our simple and secure system</p>
+            <h3 className="text-xl font-bold mb-3 dark:text-white">Easy Booking</h3>
+            <p className="text-gray-600 dark:text-gray-300">Book tickets in seconds with our simple and secure system</p>
           </div>
           <div className="glass-card text-center">
             <Ticket className="w-16 h-16 mx-auto text-purple-600 mb-4" />
-            <h3 className="text-xl font-bold mb-3">QR Tickets</h3>
-            <p className="text-gray-600">Download QR tickets as PNG or PDF for easy check-in</p>
+            <h3 className="text-xl font-bold mb-3 dark:text-white">QR Tickets</h3>
+            <p className="text-gray-600 dark:text-gray-300">Download QR tickets as PNG or PDF for easy check-in</p>
           </div>
           <div className="glass-card text-center">
             <Award className="w-16 h-16 mx-auto text-purple-600 mb-4" />
-            <h3 className="text-xl font-bold mb-3">Best Events</h3>
-            <p className="text-gray-600">Curated selection of the best events in town</p>
+            <h3 className="text-xl font-bold mb-3 dark:text-white">Best Events</h3>
+            <p className="text-gray-600 dark:text-gray-300">Curated selection of the best events in town</p>
           </div>
         </div>
       </div>

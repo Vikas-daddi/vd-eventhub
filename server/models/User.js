@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event'
+  }]
 });
 
 userSchema.pre('save', async function(next) {

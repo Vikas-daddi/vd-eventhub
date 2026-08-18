@@ -67,8 +67,19 @@ export const AuthProvider = ({ children }) => {
     toast.success('Logged out');
   };
 
+  const toggleWishlist = async (eventId) => {
+    try {
+      const res = await api.put(`/api/auth/wishlist/${eventId}`);
+      setUser(prev => ({ ...prev, wishlist: res.data.wishlist }));
+      return res.data.wishlist;
+    } catch (error) {
+      toast.error('Failed to update wishlist');
+      throw error;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading, toggleWishlist }}>
       {children}
     </AuthContext.Provider>
   );

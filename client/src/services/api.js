@@ -1,11 +1,6 @@
 import axios from 'axios';
 
-// ✅ Hardcoded for testing
-const API_URL = 'https://vd-eventhub-backend.onrender.com';
-
-// Leave the alert for now
-alert('API_URL: ' + API_URL);
-console.log('🌐 API_URL:', API_URL);
+export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'; // ✅ uses environment variable or defaults to local backend
 
 const api = axios.create({
   baseURL: API_URL,

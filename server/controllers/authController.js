@@ -26,7 +26,7 @@ exports.register = async (req, res) => {
     res.status(201).json({
       message: 'User registered successfully',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, wishlist: user.wishlist || [] }
     });
   } catch (error) {
     console.error('Register error:', error);
@@ -74,7 +74,7 @@ exports.login = async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, wishlist: user.wishlist || [] }
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -105,6 +105,45 @@ exports.updateProfile = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('Update profile error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Toggle Wishlist
+exports.toggleWishlist = async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const index = user.wishlist.indexOf(eventId);
+    if (index === -1) {
+      user.wishlist.push(eventId); // Add to wishlist
+    } else {
+      user.wishlist.splice(index, 1); // Remove from wishlist
+    }
+
+    await user.save();
+    res.json({ message: 'Wishlist updated', wishlist: user.wishlist });
+  } catch (error) {
+    console.error('Toggle wishlist error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get populated wishlist
+exports.getWishlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate('wishlist');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user.wishlist);
+  } catch (error) {
+    console.error('Get wishlist error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

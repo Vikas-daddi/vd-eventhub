@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Calendar, LogOut, User, LayoutDashboard, Ticket } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
+import { Calendar, LogOut, User, LayoutDashboard, Ticket, Sun, Moon } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -40,6 +42,10 @@ const Navbar = () => {
               )}
             </>
           )}
+
+          <button onClick={toggleTheme} className="text-white hover:text-gray-200 transition p-1">
+            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
           
           {user ? (
             <div className="flex items-center space-x-4">

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, DollarSign, Clock, Users, Ticket, CheckCircle, CreditCard, Smartphone, X, RefreshCw, Timer } from 'lucide-react';
+import { Calendar, MapPin, DollarSign, Clock, Users, Ticket, CheckCircle, CreditCard, Smartphone, X, RefreshCw, Timer, Heart } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
-import api from '../services/api'; // ✅ uses environment variable
+import api, { API_URL } from '../services/api'; // ✅ uses environment variable
 
 const EventDetails = () => {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, toggleWishlist } = useAuth();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -151,6 +151,19 @@ const EventDetails = () => {
     toast.success('Booking status refreshed');
   };
 
+  const handleWishlistToggle = async () => {
+    if (!user) {
+      toast.error('Please login to add to wishlist');
+      navigate('/login');
+      return;
+    }
+    try {
+      await toggleWishlist(event._id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
@@ -164,18 +177,30 @@ const EventDetails = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="glass-card overflow-hidden">
-        <img
-          src={event.image ? `http://localhost:5000${event.image}` : 'https://via.placeholder.com/1200x400'}
-          alt={event.title}
-          className="w-full h-96 object-cover"
-        />
+        <div className="relative">
+          <img
+            src={event.image ? (event.image.startsWith('http') ? event.image : `${API_URL}${event.image}`) : 'https://via.placeholder.com/1200x400'}
+            alt={event.title}
+            className="w-full h-96 object-cover"
+          />
+          {user && (
+            <button 
+              onClick={handleWishlistToggle}
+              className="absolute top-6 right-6 p-3 bg-white/80 backdrop-blur rounded-full hover:bg-white transition-colors shadow-lg"
+            >
+              <Heart 
+                className={`w-6 h-6 ${user.wishlist?.includes(event._id) ? 'fill-red-500 text-red-500' : 'text-gray-500'}`} 
+              />
+            </button>
+          )}
+        </div>
         <div className="p-8">
           <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
 
-          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 mb-6 flex items-center justify-between flex-wrap gap-4">
+          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 rounded-xl p-4 mb-6 flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2">
-              <Timer className="w-6 h-6 text-purple-600" />
-              <span className="font-semibold text-gray-700">Event starts in:</span>
+              <Timer className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              <span className="font-semibold text-gray-700 dark:text-gray-300">Event starts in:</span>
             </div>
             {timeLeft.hasPassed ? (
               <span className="text-red-600 font-bold">⏰ Event has ended</span>
@@ -203,15 +228,15 @@ const EventDetails = () => {
 
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div className="space-y-3">
-              <div className="flex items-center text-gray-700"><Calendar className="w-5 h-5 mr-3 text-purple-600" /><span className="font-semibold">Date:</span><span className="ml-2">{new Date(event.date).toLocaleDateString()}</span></div>
-              <div className="flex items-center text-gray-700"><Clock className="w-5 h-5 mr-3 text-purple-600" /><span className="font-semibold">Time:</span><span className="ml-2">{event.time}</span></div>
-              <div className="flex items-center text-gray-700"><MapPin className="w-5 h-5 mr-3 text-purple-600" /><span className="font-semibold">Venue:</span><span className="ml-2">{event.venue}</span></div>
-              <div className="flex items-center text-gray-700"><DollarSign className="w-5 h-5 mr-3 text-purple-600" /><span className="font-semibold">Price:</span><span className="ml-2 text-2xl font-bold text-purple-600">₹{event.price}</span></div>
-              <div className="flex items-center text-gray-700"><Users className="w-5 h-5 mr-3 text-purple-600" /><span className="font-semibold">Available Seats:</span><span className="ml-2">{event.availableSeats}</span></div>
+              <div className="flex items-center text-gray-700 dark:text-gray-300"><Calendar className="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" /><span className="font-semibold">Date:</span><span className="ml-2">{new Date(event.date).toLocaleDateString()}</span></div>
+              <div className="flex items-center text-gray-700 dark:text-gray-300"><Clock className="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" /><span className="font-semibold">Time:</span><span className="ml-2">{event.time}</span></div>
+              <div className="flex items-center text-gray-700 dark:text-gray-300"><MapPin className="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" /><span className="font-semibold">Venue:</span><span className="ml-2">{event.venue}</span></div>
+              <div className="flex items-center text-gray-700 dark:text-gray-300"><DollarSign className="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" /><span className="font-semibold">Price:</span><span className="ml-2 text-2xl font-bold text-purple-600 dark:text-purple-400">₹{event.price}</span></div>
+              <div className="flex items-center text-gray-700 dark:text-gray-300"><Users className="w-5 h-5 mr-3 text-purple-600 dark:text-purple-400" /><span className="font-semibold">Available Seats:</span><span className="ml-2">{event.availableSeats}</span></div>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-3">About this event</h3>
-              <p className="text-gray-700 leading-relaxed">{event.description}</p>
+              <h3 className="text-xl font-bold mb-3 dark:text-white">About this event</h3>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{event.description}</p>
               <div className="mt-4"><span className="inline-block bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">{event.category}</span></div>
             </div>
           </div>

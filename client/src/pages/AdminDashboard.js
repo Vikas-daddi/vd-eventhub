@@ -260,19 +260,19 @@ const AdminDashboard = () => {
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-        <div className="bg-white rounded-xl shadow-lg p-4 text-center"><Users className="w-8 h-8 mx-auto text-purple-600 mb-2" /><h3 className="text-2xl font-bold">{stats.totalUsers}</h3><p className="text-sm text-gray-600">Total Users</p></div>
-        <div className="bg-white rounded-xl shadow-lg p-4 text-center"><Calendar className="w-8 h-8 mx-auto text-purple-600 mb-2" /><h3 className="text-2xl font-bold">{stats.totalEvents}</h3><p className="text-sm text-gray-600">Total Events</p></div>
-        <div className="bg-white rounded-xl shadow-lg p-4 text-center"><Ticket className="w-8 h-8 mx-auto text-purple-600 mb-2" /><h3 className="text-2xl font-bold">{stats.totalBookings}</h3><p className="text-sm text-gray-600">Total Bookings</p></div>
-        <div className="bg-white rounded-xl shadow-lg p-4 text-center"><DollarSign className="w-8 h-8 mx-auto text-purple-600 mb-2" /><h3 className="text-2xl font-bold">₹{Math.round(stats.totalRevenue)}</h3><p className="text-sm text-gray-600">Total Revenue</p></div>
-        <div className="bg-white rounded-xl shadow-lg p-4 text-center"><TrendingUp className="w-8 h-8 mx-auto text-purple-600 mb-2" /><h3 className="text-2xl font-bold">{stats.attendancePercentage}%</h3><p className="text-sm text-gray-600">Attendance Rate</p></div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 text-center"><Users className="w-8 h-8 mx-auto text-purple-600 dark:text-purple-400 mb-2" /><h3 className="text-2xl font-bold dark:text-white">{stats.totalUsers}</h3><p className="text-sm text-gray-600 dark:text-gray-300">Total Users</p></div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 text-center"><Calendar className="w-8 h-8 mx-auto text-purple-600 dark:text-purple-400 mb-2" /><h3 className="text-2xl font-bold dark:text-white">{stats.totalEvents}</h3><p className="text-sm text-gray-600 dark:text-gray-300">Total Events</p></div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 text-center"><Ticket className="w-8 h-8 mx-auto text-purple-600 dark:text-purple-400 mb-2" /><h3 className="text-2xl font-bold dark:text-white">{stats.totalBookings}</h3><p className="text-sm text-gray-600 dark:text-gray-300">Total Bookings</p></div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 text-center"><DollarSign className="w-8 h-8 mx-auto text-purple-600 dark:text-purple-400 mb-2" /><h3 className="text-2xl font-bold dark:text-white">₹{Math.round(stats.totalRevenue)}</h3><p className="text-sm text-gray-600 dark:text-gray-300">Total Revenue</p></div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 text-center"><TrendingUp className="w-8 h-8 mx-auto text-purple-600 dark:text-purple-400 mb-2" /><h3 className="text-2xl font-bold dark:text-white">{stats.attendancePercentage}%</h3><p className="text-sm text-gray-600 dark:text-gray-300">Attendance Rate</p></div>
       </div>
 
       {/* QR Scanner Modal */}
       {showScanner && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
-            <div className="flex justify-between items-center mb-4"><h2 className="text-2xl font-bold">Scan QR Code</h2><button onClick={closeScanner}><X className="w-6 h-6 text-gray-500 hover:text-gray-700" /></button></div>
-            <p className="text-gray-600 mb-4">Place the QR code in front of your camera</p>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 max-w-md w-full text-gray-800 dark:text-gray-200">
+            <div className="flex justify-between items-center mb-4"><h2 className="text-2xl font-bold dark:text-white">Scan QR Code</h2><button onClick={closeScanner}><X className="w-6 h-6 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" /></button></div>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Place the QR code in front of your camera</p>
             <div id="qr-reader" className="w-full"></div>
             <button onClick={closeScanner} className="mt-4 w-full bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600">Close Scanner</button>
           </div>
@@ -280,14 +280,14 @@ const AdminDashboard = () => {
       )}
 
       {/* Events Table */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-        <h2 className="text-2xl font-bold mb-6">Manage Events</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8 text-gray-800 dark:text-gray-200">
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">Manage Events</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead><tr className="border-b"><th className="text-left py-3">Title</th><th className="text-left py-3">Category</th><th className="text-left py-3">Date</th><th className="text-left py-3">Price</th><th className="text-left py-3">Seats</th><th className="text-left py-3">Actions</th></tr></thead>
+            <thead><tr className="border-b dark:border-gray-700"><th className="text-left py-3">Title</th><th className="text-left py-3">Category</th><th className="text-left py-3">Date</th><th className="text-left py-3">Price</th><th className="text-left py-3">Seats</th><th className="text-left py-3">Actions</th></tr></thead>
             <tbody>
               {events.map(event => (
-                <tr key={event._id} className="border-b hover:bg-gray-50">
+                <tr key={event._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="py-3">{event.title}</td>
                   <td className="py-3"><span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs">{event.category}</span></td>
                   <td className="py-3">{new Date(event.date).toLocaleDateString()}</td>
@@ -306,14 +306,14 @@ const AdminDashboard = () => {
       </div>
 
       {/* All Bookings Table */}
-      <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-        <h2 className="text-2xl font-bold mb-6">All Bookings / Tickets</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8 text-gray-800 dark:text-gray-200">
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">All Bookings / Tickets</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead><tr className="border-b"><th className="text-left py-3">User</th><th className="text-left py-3">Event</th><th className="text-left py-3">Amount</th><th className="text-left py-3">Payment</th><th className="text-left py-3">Attendance</th><th className="text-left py-3">Booked On</th><th className="text-left py-3">Ticket ID</th><th>Actions</th></tr></thead>
+            <thead><tr className="border-b dark:border-gray-700"><th className="text-left py-3">User</th><th className="text-left py-3">Event</th><th className="text-left py-3">Amount</th><th className="text-left py-3">Payment</th><th className="text-left py-3">Attendance</th><th className="text-left py-3">Booked On</th><th className="text-left py-3">Ticket ID</th><th>Actions</th></tr></thead>
             <tbody>
               {bookings.map(booking => (
-                <tr key={booking._id} className="border-b hover:bg-gray-50">
+                <tr key={booking._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="py-3">{booking.userId?.name || 'Unknown'}<div className="text-xs text-gray-400">{booking.userId?.email}</div></td>
                   <td className="py-3">{booking.eventId?.title || 'Deleted Event'}</td>
                   <td className="py-3">₹{booking.amount}</td>
@@ -331,14 +331,14 @@ const AdminDashboard = () => {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white rounded-xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold mb-6">Registered Users</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-gray-800 dark:text-gray-200">
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">Registered Users</h2>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead><tr className="border-b"><th className="text-left py-3">Name</th><th className="text-left py-3">Email</th><th className="text-left py-3">Role</th><th className="text-left py-3">Joined</th></tr></thead>
+            <thead><tr className="border-b dark:border-gray-700"><th className="text-left py-3">Name</th><th className="text-left py-3">Email</th><th className="text-left py-3">Role</th><th className="text-left py-3">Joined</th></tr></thead>
             <tbody>
               {users.map(user => (
-                <tr key={user._id} className="border-b hover:bg-gray-50">
+                <tr key={user._id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="py-3">{user.name}</td>
                   <td className="py-3">{user.email}</td>
                   <td className="py-3"><span className={`px-2 py-1 rounded-full text-xs ${user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'}`}>{user.role}</span></td>
@@ -353,22 +353,22 @@ const AdminDashboard = () => {
       {/* Add Event Modal */}
       {showAddEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Add New Event</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto text-gray-800 dark:text-gray-200">
+            <h2 className="text-2xl font-bold mb-4 dark:text-white">Add New Event</h2>
             <form onSubmit={handleAddEvent}>
-              <input type="text" placeholder="Event Title" className="w-full p-2 border rounded mb-3" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} required />
-              <textarea placeholder="Description" rows="3" className="w-full p-2 border rounded mb-3" value={newEvent.description} onChange={e => setNewEvent({...newEvent, description: e.target.value})} required />
-              <select className="w-full p-2 border rounded mb-3" value={newEvent.category} onChange={e => setNewEvent({...newEvent, category: e.target.value})}>
+              <input type="text" placeholder="Event Title" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} required />
+              <textarea placeholder="Description" rows="3" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.description} onChange={e => setNewEvent({...newEvent, description: e.target.value})} required />
+              <select className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.category} onChange={e => setNewEvent({...newEvent, category: e.target.value})}>
                 <option>Conference</option><option>Workshop</option><option>Concert</option><option>Seminar</option><option>Sports</option><option>Other</option>
               </select>
-              <input type="text" placeholder="Venue" className="w-full p-2 border rounded mb-3" value={newEvent.venue} onChange={e => setNewEvent({...newEvent, venue: e.target.value})} required />
-              <input type="date" className="w-full p-2 border rounded mb-3" value={newEvent.date} onChange={e => setNewEvent({...newEvent, date: e.target.value})} required />
-              <input type="text" placeholder="Time (e.g., 10:00 AM)" className="w-full p-2 border rounded mb-3" value={newEvent.time} onChange={e => setNewEvent({...newEvent, time: e.target.value})} required />
-              <input type="number" placeholder="Price (₹)" className="w-full p-2 border rounded mb-3" value={newEvent.price} onChange={e => setNewEvent({...newEvent, price: e.target.value})} required />
-              <input type="number" placeholder="Available Seats" className="w-full p-2 border rounded mb-3" value={newEvent.availableSeats} onChange={e => setNewEvent({...newEvent, availableSeats: e.target.value})} required />
+              <input type="text" placeholder="Venue" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.venue} onChange={e => setNewEvent({...newEvent, venue: e.target.value})} required />
+              <input type="date" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.date} onChange={e => setNewEvent({...newEvent, date: e.target.value})} required />
+              <input type="text" placeholder="Time (e.g., 10:00 AM)" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.time} onChange={e => setNewEvent({...newEvent, time: e.target.value})} required />
+              <input type="number" placeholder="Price (₹)" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.price} onChange={e => setNewEvent({...newEvent, price: e.target.value})} required />
+              <input type="number" placeholder="Available Seats" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={newEvent.availableSeats} onChange={e => setNewEvent({...newEvent, availableSeats: e.target.value})} required />
               <div className="mb-3">
-                <label className="block text-gray-700 mb-1">Image URL (optional)</label>
-                <input type="text" placeholder="https://example.com/event-image.jpg" className="w-full p-2 border rounded" value={newEvent.image} onChange={e => setNewEvent({...newEvent, image: e.target.value})} />
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Image URL (optional)</label>
+                <input type="text" placeholder="https://example.com/event-image.jpg" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded" value={newEvent.image} onChange={e => setNewEvent({...newEvent, image: e.target.value})} />
                 {newEvent.image && <img src={newEvent.image} alt="Preview" className="mt-2 h-24 w-24 object-cover rounded" />}
               </div>
               <div className="flex gap-3 mt-4">
@@ -383,22 +383,22 @@ const AdminDashboard = () => {
       {/* Edit Event Modal */}
       {showEditEvent && editingEvent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Edit Event</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto text-gray-800 dark:text-gray-200">
+            <h2 className="text-2xl font-bold mb-4 dark:text-white">Edit Event</h2>
             <form onSubmit={handleUpdateEvent}>
-              <input type="text" placeholder="Event Title" className="w-full p-2 border rounded mb-3" value={editFormData.title} onChange={e => setEditFormData({...editFormData, title: e.target.value})} required />
-              <textarea placeholder="Description" rows="3" className="w-full p-2 border rounded mb-3" value={editFormData.description} onChange={e => setEditFormData({...editFormData, description: e.target.value})} required />
-              <select className="w-full p-2 border rounded mb-3" value={editFormData.category} onChange={e => setEditFormData({...editFormData, category: e.target.value})}>
+              <input type="text" placeholder="Event Title" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.title} onChange={e => setEditFormData({...editFormData, title: e.target.value})} required />
+              <textarea placeholder="Description" rows="3" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.description} onChange={e => setEditFormData({...editFormData, description: e.target.value})} required />
+              <select className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.category} onChange={e => setEditFormData({...editFormData, category: e.target.value})}>
                 <option>Conference</option><option>Workshop</option><option>Concert</option><option>Seminar</option><option>Sports</option><option>Other</option>
               </select>
-              <input type="text" placeholder="Venue" className="w-full p-2 border rounded mb-3" value={editFormData.venue} onChange={e => setEditFormData({...editFormData, venue: e.target.value})} required />
-              <input type="date" className="w-full p-2 border rounded mb-3" value={editFormData.date} onChange={e => setEditFormData({...editFormData, date: e.target.value})} required />
-              <input type="text" placeholder="Time (e.g., 10:00 AM)" className="w-full p-2 border rounded mb-3" value={editFormData.time} onChange={e => setEditFormData({...editFormData, time: e.target.value})} required />
-              <input type="number" placeholder="Price (₹)" className="w-full p-2 border rounded mb-3" value={editFormData.price} onChange={e => setEditFormData({...editFormData, price: e.target.value})} required />
-              <input type="number" placeholder="Available Seats" className="w-full p-2 border rounded mb-3" value={editFormData.availableSeats} onChange={e => setEditFormData({...editFormData, availableSeats: e.target.value})} required />
+              <input type="text" placeholder="Venue" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.venue} onChange={e => setEditFormData({...editFormData, venue: e.target.value})} required />
+              <input type="date" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.date} onChange={e => setEditFormData({...editFormData, date: e.target.value})} required />
+              <input type="text" placeholder="Time (e.g., 10:00 AM)" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.time} onChange={e => setEditFormData({...editFormData, time: e.target.value})} required />
+              <input type="number" placeholder="Price (₹)" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.price} onChange={e => setEditFormData({...editFormData, price: e.target.value})} required />
+              <input type="number" placeholder="Available Seats" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded mb-3" value={editFormData.availableSeats} onChange={e => setEditFormData({...editFormData, availableSeats: e.target.value})} required />
               <div className="mb-3">
-                <label className="block text-gray-700 mb-1">Image URL</label>
-                <input type="text" placeholder="https://example.com/event-image.jpg" className="w-full p-2 border rounded" value={editFormData.image} onChange={e => setEditFormData({...editFormData, image: e.target.value})} />
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Image URL</label>
+                <input type="text" placeholder="https://example.com/event-image.jpg" className="w-full p-2 border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded" value={editFormData.image} onChange={e => setEditFormData({...editFormData, image: e.target.value})} />
                 {editFormData.image && <img src={editFormData.image} alt="Preview" className="mt-2 h-24 w-24 object-cover rounded" />}
               </div>
               <div className="flex gap-3 mt-4">

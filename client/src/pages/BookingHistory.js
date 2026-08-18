@@ -112,17 +112,17 @@ const BookingHistory = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-600 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-500 to-indigo-600 dark:from-transparent dark:via-transparent dark:to-transparent py-12 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-10">
           <h1 className="text-4xl font-bold text-white mb-2">My Tickets</h1>
-          <p className="text-purple-200">Your event passes and QR codes</p>
+          <p className="text-purple-200 dark:text-gray-300">Your event passes and QR codes</p>
         </div>
         
         {bookings.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl text-center py-16">
-            <Ticket className="w-20 h-20 mx-auto text-purple-300 mb-4" />
-            <p className="text-gray-600 text-lg mb-4">No tickets yet</p>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl text-center py-16">
+            <Ticket className="w-20 h-20 mx-auto text-purple-300 dark:text-purple-700 mb-4" />
+            <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">No tickets yet</p>
             <button 
               onClick={() => window.location.href = '/events'}
               className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
@@ -134,12 +134,12 @@ const BookingHistory = () => {
           <div className="grid md:grid-cols-2 gap-6">
             {bookings.map((booking) => (
               <div key={booking._id} className="relative">
-                <div className={`bg-white rounded-2xl shadow-2xl overflow-hidden transition-transform hover:scale-105 ${booking.attendanceStatus === 'cancelled' ? 'opacity-60' : ''}`}>
+                <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transition-transform hover:scale-105 ${booking.attendanceStatus === 'cancelled' ? 'opacity-60' : ''}`}>
                   {/* Ticket Header */}
-                  <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4">
+                  <div className="bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-gray-700 dark:to-gray-800 p-4 border-b dark:border-gray-600">
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="text-purple-200 text-xs uppercase tracking-wider">Digital Pass</p>
+                        <p className="text-purple-200 dark:text-gray-400 text-xs uppercase tracking-wider">Digital Pass</p>
                         <p className="text-white font-bold text-xl">{booking.eventId?.title}</p>
                       </div>
                       <Ticket className="text-white w-8 h-8 opacity-80" />
@@ -159,69 +159,69 @@ const BookingHistory = () => {
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3 mb-4">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Calendar className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                        <Calendar className="w-4 h-4 text-purple-500 dark:text-gray-400" />
                         <div>
-                          <p className="text-xs text-gray-400">Date</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">Date</p>
                           <p className="text-sm font-semibold">{new Date(booking.eventId?.date).toLocaleDateString()}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Clock className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                        <Clock className="w-4 h-4 text-purple-500 dark:text-gray-400" />
                         <div>
-                          <p className="text-xs text-gray-400">Time</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">Time</p>
                           <p className="text-sm font-semibold">{booking.eventId?.time}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <MapPin className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                        <MapPin className="w-4 h-4 text-purple-500 dark:text-gray-400" />
                         <div>
-                          <p className="text-xs text-gray-400">Venue</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">Venue</p>
                           <p className="text-sm font-semibold truncate">{booking.eventId?.venue}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <DollarSign className="w-4 h-4 text-purple-500" />
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                        <DollarSign className="w-4 h-4 text-purple-500 dark:text-gray-400" />
                         <div>
-                          <p className="text-xs text-gray-400">Amount</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">Amount</p>
                           <p className="text-sm font-semibold">₹{booking.amount}</p>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="border-t border-dashed border-gray-200 my-4"></div>
+                    <div className="border-t border-dashed border-gray-200 dark:border-gray-700 my-4"></div>
                     
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-gray-400 mb-1">Ticket ID</p>
-                        <p className="text-xs font-mono text-gray-600 break-all max-w-[150px]">{booking._id}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">Ticket ID</p>
+                        <p className="text-xs font-mono text-gray-600 dark:text-gray-300 break-all max-w-[150px]">{booking._id}</p>
                         <button
                           onClick={() => {
                             navigator.clipboard.writeText(booking._id);
                             toast.success('Booking ID copied!');
                           }}
-                          className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-2 py-1 rounded mt-1 transition"
+                          className="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 px-2 py-1 rounded mt-1 transition"
                         >
                           📋 Copy ID
                         </button>
-                        <p className="text-xs text-gray-400 mt-2">Booked on</p>
-                        <p className="text-sm text-gray-600">{new Date(booking.bookingDate).toLocaleDateString()}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">Booked on</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{new Date(booking.bookingDate).toLocaleDateString()}</p>
                       </div>
                       
                       {booking.qrCode && booking.attendanceStatus !== 'cancelled' && (
                         <button
                           onClick={() => setShowQR(showQR === booking._id ? null : booking._id)}
-                          className="bg-purple-100 p-3 rounded-xl hover:bg-purple-200 transition"
+                          className="bg-purple-100 dark:bg-gray-700 p-3 rounded-xl hover:bg-purple-200 dark:hover:bg-gray-600 transition"
                         >
-                          {showQR === booking._id ? <Eye className="w-8 h-8 text-purple-600" /> : <Download className="w-8 h-8 text-purple-600" />}
+                          {showQR === booking._id ? <Eye className="w-8 h-8 text-purple-600 dark:text-gray-300" /> : <Download className="w-8 h-8 text-purple-600 dark:text-gray-300" />}
                         </button>
                       )}
                     </div>
                     
                     {showQR === booking._id && booking.qrCode && booking.attendanceStatus !== 'cancelled' && (
-                      <div className="mt-4 pt-4 border-t text-center bg-gray-50 rounded-xl p-4">
-                        <img src={booking.qrCode} alt="QR Code" className="w-40 h-40 mx-auto border-2 border-purple-200 rounded-xl p-2 bg-white" />
-                        <p className="text-xs text-gray-500 mt-2">Scan this QR code at the venue entrance</p>
+                      <div className="mt-4 pt-4 border-t dark:border-gray-700 text-center bg-gray-50 dark:bg-gray-900 rounded-xl p-4">
+                        <img src={booking.qrCode} alt="QR Code" className="w-40 h-40 mx-auto border-2 border-purple-200 dark:border-gray-700 rounded-xl p-2 bg-white" />
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Scan this QR code at the venue entrance</p>
                         <div className="flex gap-2 justify-center mt-3">
                           <button onClick={() => downloadPNG(booking.qrCode, booking._id)} className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600 transition">Save as PNG</button>
                           <button onClick={() => downloadPDF(booking, booking.qrCode)} className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-600 transition">Download PDF</button>
@@ -256,8 +256,8 @@ const BookingHistory = () => {
                     )}
                   </div>
                   
-                  <div className="bg-gray-50 px-5 py-3 rounded-b-2xl">
-                    <p className="text-center text-xs text-gray-400">Powered by EventHub | Smart Event Management</p>
+                  <div className="bg-gray-50 dark:bg-gray-900 px-5 py-3 rounded-b-2xl">
+                    <p className="text-center text-xs text-gray-400 dark:text-gray-500">Powered by EventHub | Smart Event Management</p>
                   </div>
                 </div>
               </div>
